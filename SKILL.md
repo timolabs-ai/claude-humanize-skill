@@ -252,11 +252,11 @@ Never invent a citation. If you cannot verify a claim, flag it.
 
 #### Narration and shape audit
 
-Word-level fixes are not enough. After applying the rules above, audit the piece for AI-shaped narration. AI writing tends to be too smooth, too symmetrical, too generically confident, and too narratively staged. Public AI-detection tools (GPTZero, Turnitin, QuillBot) describe their signals as perplexity, burstiness, and uniformity. These signals reflect the same editorial problems a serious human editor would flag.
+Word-level fixes are not enough. After applying the rules above, audit the piece for AI-shaped narration. AI writing tends to be too smooth, too symmetrical, too generically confident, and too narratively staged. Common detector and humanizer tools focus on predictability, sentence variation, repetition, tone, clarity, flow, and paraphrased-AI patterns. Use that only as editorial context. Do not optimize for detector scores. Optimize for natural, specific, professional writing.
 
 **AI-shaped narration patterns to flag and rewrite:**
 - Paragraphs that all sit at similar length or use the same internal structure.
-- Sections that follow a repeated "setup → explanation → takeaway" pattern. This is the deepest Claude tell. Every claim earns its keep by explaining itself and then summarizing why it mattered. Break the pattern by cutting takeaways or merging the explanation into the claim.
+- Sections that follow a repeated "setup → explanation → takeaway" pattern. This is the deepest Claude tell. Every claim earns its keep by explaining itself and then summarizing why it mattered. If three or more consecutive sections follow this shape, remove the takeaway sentences, merge repeated explanations into the claims, or reorder the material so the structure follows the actual logic of the piece. Do not let consecutive sections repeat the same internal movement, even when each section reads well in isolation.
 - Claims that sound polished but contain no concrete actor, action, constraint, example, or consequence.
 - Smooth transitions that exist only to move the essay along, with no logical connection to the prior sentence.
 - Repeated explanatory scaffolds such as "This matters because," "The key is," "The result is," "In practice," "At a high level," "What's interesting is," or "At its core."
@@ -293,6 +293,22 @@ Apply these positive instructions during rewrite:
 - Prefer a plain direct claim over a polished "insight" sentence.
 
 The output should sound like a serious human editor clarified the draft. It should not sound like an AI tried to make the prose more engaging.
+
+#### Paragraph-purpose rule
+
+Every paragraph must do one clear job: make a claim, give evidence, explain a consequence, provide an instruction, add necessary context, or move the reader to a genuinely new point. Delete or rewrite paragraphs that only frame, summarize, soften, transition, or perform insight. A paragraph whose only job is to "warm the reader up" or to "tie the previous section to the next" is almost always cuttable.
+
+When in doubt, ask whether the paragraph would survive a serious editor's pencil. If the only answer is "it makes the piece flow," cut it. Flow comes from the logic of the argument, not from connective tissue.
+
+#### Specificity-density rule
+
+Every substantive paragraph must include at least one concrete element when the source supports it: a named actor, a specific action, a hard constraint, a worked example, a measurable consequence, a number, a named object, or a specific decision. If a paragraph contains only abstract claims, rewrite it with a specific element or cut it.
+
+Generic paragraph: "Companies that invest in customer success see better retention outcomes. This is increasingly important in competitive markets."
+
+Rewrite with specificity: "After moving two account managers from new-sales to mid-market renewals, the SaaS company's retention rate moved from 78% to 91% over three quarters. Other teams in the same segment have reported similar shifts when they hire dedicated CS staff."
+
+If the source has nothing specific to offer on the point, do not pad with adjectives. Cut the paragraph or merge its single load-bearing sentence into an adjacent paragraph that does carry specifics.
 
 ---
 
@@ -406,13 +422,26 @@ Before producing output, scan the rewritten content for AI-tell patterns that ma
 
 If any pattern appears, rewrite for editorial substance per the positive standard in Always Applied. Do not fix narration problems by adding randomness, quirks, blanket contractions, or roughness — humans notice that on the page.
 
+**Final human-read test.** Before output, read the piece end to end as a reader rather than as an editor running a checklist. Would this sound normal if it came from a competent editor, founder, operator, analyst, or subject-matter expert? If it sounds like a polished narrator explaining the importance of the topic, rewrite the offending passage. If it sounds like a person clearly saying what they mean, keep it. This is the final gate. Pass before producing output.
+
 ---
 
 ## Step 5: Output
 
-Return the humanized content with no preamble.
+Return only the humanized content with no preamble. Do not append an audit or Risk Flags block by default. The output should look like an edited draft, not a tool report.
 
-Then append a one-line audit and the Risk Flags block:
+**Append the audit and Risk Flags only when at least one of these conditions holds:**
+
+- The user explicitly asked for the audit ("show the audit," "show me what you changed," "details please," "with audit," "give me the change log").
+- The sensitivity check in Step 1 fired (legal, medical, HR/employment, or formal sensitive correspondence).
+- The long-input warning in Step 1 fired (content was over approximately 2,000 words).
+- `meaning_risk` is medium or high — you altered sentence structure, an example, a number, a date, a name, a commitment, or an instruction in a way that may have shifted what the original said.
+- `complete_sentence_check` or `narration_audit` failed and residual issues remain in the output.
+- Ambiguity checks flagged any unverifiable claim that was preserved without attribution.
+
+If none of those conditions hold, return only the rewritten content and stop. The user can ask for the audit any time after seeing the output.
+
+**Audit format (when shown):**
 
 ```
 ---
@@ -431,7 +460,7 @@ Then append a one-line audit and the Risk Flags block:
 - narration_audit: <pass/fail — any remaining setup-explanation-takeaway patterns, scaffold phrases, or performed-insight sentences listed>
 ```
 
-The audit summary always appears. The Risk Flags block always appears. The full Change Log appears only on request — when the user asks "show the full change log," "show me what you changed," "details please," or similar:
+The full Change Log appears only on explicit request — when the user asks "show the full change log," "show me what you changed," "details please," or similar:
 
 ```
 **Change Log:**
