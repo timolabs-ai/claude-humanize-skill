@@ -46,7 +46,7 @@ The skill picks intensity from content type by default. To force a mode, add it 
 
 ## What the skill changes
 
-Five editorial layers run in sequence. Each layer addresses a different class of AI writing tell.
+Five editorial layers run in sequence: vocabulary, sentence shape, bullet rhythm, paragraph rhythm, and section structure. Each layer targets a different class of AI writing tell.
 
 ### 1. Vocabulary
 
@@ -74,10 +74,10 @@ After:
 
 Specific rules apply to four sentence patterns:
 
-- Sentence-opening filler is removed.
-- Contrastive constructions ("not just X, but Y," "X rather than Y") are rewritten as positive statements.
-- Sentence fragments are converted to complete sentences. The rule applies in casual and irreverent registers too.
-- Comma-joined sentence chains are split into separate sentences.
+- Sentence-opening filler ("To keep it direct," "In short," "Put simply") gets cut.
+- Contrastive constructions ("not just X, but Y," "X rather than Y") become positive statements.
+- Every sentence fragment converts to a complete sentence. The rule applies in casual and irreverent registers too.
+- Long comma-joined chains split into separate sentences with periods.
 
 ### 3. Bullet rhythm
 
