@@ -1,114 +1,172 @@
 # /humanize — Strip AI Writing Patterns from Content
 
-A Claude Code skill that rewrites AI-generated text to sound human. Invoke it as `/humanize` and it walks the content through a five-layer editorial pass: vocabulary, sentence shape, paragraph rhythm, section structure, and narration patterns.
+The /humanize skill rewrites AI-generated text into prose that reads like a human edited it. The target is the structural patterns that mark text as AI-produced: hedging, rhetorical scaffolding, contrastive emphasis, polished filler, and performative narration. Surface features like contractions and typos stay untouched.
 
-## What this skill does
+## Quick example
 
-`/humanize` cleans the writing tells that mark text as AI-produced. Banned vocabulary (robust, seamless, leverage, unlock, transformative, and so on), em-dashes, filler sentence openers, contrastive constructions (X, not Y), rhetorical questions in headings, metric-as-headline framing, setup-explanation-takeaway narration shapes, motivational closers, and the polished-but-empty Claude-tone that runs through a lot of generated text.
+A typical AI-generated paragraph:
 
-The output target is the voice of a serious editor. Plain, specific, unsentimental, useful. If a sentence sounds impressive but does not add information, the skill cuts it.
+> In today's fast-paced digital landscape, robust customer engagement strategies are no longer a luxury — they are mission-critical. By leveraging our cutting-edge platform, organizations can seamlessly unlock transformative growth and empower their teams to deliver best-in-class experiences. The key is not just adopting technology, but reimagining how we connect with customers.
 
-## Why this exists (the editorial-substance principle)
+The same paragraph after `/humanize`:
 
-Most attempts to "humanize" AI writing add surface roughness. Random typos, fake contractions, intentionally broken grammar, eccentric phrasing meant to read as quirky. This skill rejects that approach.
+> Customer engagement has become a core operational concern for most B2B organizations. The platform consolidates onboarding, retention workflows, and reporting into a single system. Adoption alone does not produce results. Teams that succeed redesign their customer-contact processes around the tool.
 
-The position is that AI writing reads as AI not because it is too clean, but because it is structurally performative. It hedges. It builds rhetorical scaffolding around weak claims. It uses contrastive emphasis (not just X, but Y) to make filler feel substantive. It opens with framing sentences and closes with quietly-profound takeaways. It pads with adjectives that signal importance without earning it.
+The lengths are comparable. The information density is much higher.
 
-Editorial substance is the cure, not surface roughness. The skill rewrites for clarity, concrete detail, and complete sentences. It does not add contractions, fragments, or deliberate informality.
+## Install
 
-## Installation
-
-Drop the skill into your Claude Code skills directory:
+Quick install (copy the skill file directly):
 
 ```
 mkdir -p ~/.claude/skills/humanize
 curl -o ~/.claude/skills/humanize/SKILL.md https://raw.githubusercontent.com/timolabs-ai/claude-humanize-skill/main/SKILL.md
 ```
 
-Or clone the repo and symlink:
+Developer install (clone and symlink, easier to pull updates):
 
 ```
 git clone https://github.com/timolabs-ai/claude-humanize-skill.git ~/repos/claude-humanize-skill
 ln -s ~/repos/claude-humanize-skill ~/.claude/skills/humanize
 ```
 
-After installation, restart Claude Code and confirm the skill is registered. It should appear in your available skills list as `humanize`.
+Restart Claude Code. The skill registers as `humanize`.
 
-## How to invoke
+## Use
 
-The skill triggers on any of these patterns:
+Paste content and invoke:
 
-- The slash command `/humanize`
-- Phrases such as "humanize this," "make this sound human," "remove AI writing," "de-AI this," "strip AI patterns," "make this less robotic"
+```
+/humanize <paste content here>
+```
 
-You can also reference it directly: "Run this through the humanize skill."
+Trigger phrases also work: "humanize this," "make this sound human," "strip AI writing," "de-AI this."
 
-## What the skill checks
+The skill picks intensity from content type by default. To force a mode, add it to the request, for example "humanize this in Full mode."
 
-The skill applies five editorial layers in sequence.
+## What the skill changes
 
-### Word layer (vocabulary)
-Banned words and phrases that mark text as AI-produced. The list covers marketing filler (seamless, robust, leverage, holistic, transformative, revolutionary, cutting-edge, best-in-class, game-changing), consulting tells (orchestrate, mission-critical, at its core), and Claude-specific patterns (delve, tapestry, unlock, empower, resonate). Em-dashes are replaced with commas, colons, or periods. Filler sentence openers are removed.
+Five editorial layers run in sequence. Each layer addresses a different class of AI writing tell.
 
-### Sentence layer (grammar and shape)
-Sentence-opening clauses such as "To keep it direct," "In short," and "Put simply" are deleted. Contrastive constructions ("not X but Y") are rewritten as positive statements. Sentence fragments are converted to complete sentences across all modes and tones, with no exceptions for casual or irreverent voice. Comma-joined sentence chains are split into separate sentences.
+### 1. Vocabulary
 
-### Bullet layer (list rhythm)
-Bullets that all share the same syntactic shape are varied. Bullet lists that read as parallel slogans are rewritten for varied length and structure. Banned bullet-list transitions: "Furthermore," "Moreover," "Additionally."
+The vocabulary pass removes words and phrases that mark text as marketing or consulting prose. Examples:
 
-### Paragraph layer (rhythm and symmetry)
-Anti-symmetry pass: paragraphs of identical length and shape are broken up. Polished-but-empty claims are cut. The setup-explanation-takeaway pattern (a sentence framing what comes next, a sentence explaining it, a sentence stating its significance) is rewritten because it reads as Claude-trained narration.
+| Banned | Why it gets flagged | Replacement strategy |
+|---|---|---|
+| robust, seamless, holistic | Vague intensifier with no information | Cut, or replace with a specific quality ("reliable under load," "low-friction handoff") |
+| leverage (verb), unlock, empower | Marketing register | Use the plain verb ("use," "enable") |
+| transformative, revolutionary, game-changing | Hype without evidence | Cut, or quantify the change |
+| at its core, in today's landscape, mission-critical | Filler framing | Cut |
+| delve, tapestry, resonate | Frequent in AI output | Substitute a concrete verb or cut |
 
-### Section layer (structure and narration)
-Heading rules apply across all content types. Rhetorical-question headings ("Are We Hitting Targets?," "What if X?") become declarative descriptive phrases. Contrastive headings ("X, not Y," "More than X," "Beyond X," "Not just X but Y") become positive descriptions. Colon-subtitle marketing format ("Unlocking X: A Y Approach") is reduced to a single descriptive phrase. Vague noun-phrase abstractions ("Empowering Teams Through Innovation," "The Future of X") become concrete descriptions of what the section actually contains. Metric-as-headline ("Revenue down 12%," "40% productivity gain") is converted to descriptive form ("Q3 revenue performance," "Productivity changes since launch") because numbers belong in the body where they have context.
+Em-dashes get replaced with commas, colons, or periods. Filler sentence openers ("To keep it direct," "In short," "Put simply") are deleted.
 
-Performed-insight closer sentences ("This is how X becomes real," "What this all means," "The lesson here is") are cut. Motivational-cadence sentences are cut. Grand framing sentences ("In today's landscape," "At its core") are cut.
+### 2. Sentence shape
+
+The sentence pass handles grammatical shape, fragments, and contrastive constructions.
+
+Before:
+> To keep it direct, our solution isn't just powerful, it's intuitive.
+
+After:
+> The solution handles complex use cases and stays easy to learn.
+
+Specific rules apply to four sentence patterns:
+
+- Sentence-opening filler is removed.
+- Contrastive constructions ("not just X, but Y," "X rather than Y") are rewritten as positive statements.
+- Sentence fragments are converted to complete sentences. The rule applies in casual and irreverent registers too.
+- Comma-joined sentence chains are split into separate sentences.
+
+### 3. Bullet rhythm
+
+The bullet pass varies grammatical shape across list items. Bullet lists that read as parallel slogans get rewritten for varied length and structure. Three transitions are banned at the start of bullets: "Furthermore," "Moreover," "Additionally."
+
+Before:
+- Drives revenue
+- Empowers teams
+- Unlocks growth
+
+After:
+- Sales pipeline coverage doubled in the first two quarters at the design partners.
+- Operations teams now run the system without engineering support.
+- Three customer cohorts saw cycle-time reductions of 15-22%.
+
+### 4. Paragraph rhythm
+
+The paragraph pass breaks up symmetric structures and cuts polished-but-empty sentences.
+
+Before:
+> Let's talk about onboarding. Onboarding is the process by which new users learn to use your product. Done well, it sets the tone for the entire customer relationship.
+
+After:
+> Onboarding sets the tone for the customer relationship. Most B2B products lose 20-40% of signups in the first session, usually because the first-screen experience is unclear about what to do next.
+
+The framing-then-explanation-then-takeaway shape gets rewritten because it reads as AI-trained narration. Paragraphs of identical length and sentence-shape are broken up.
+
+### 5. Section structure and headings
+
+Headings should describe what the section contains. Rules apply across all content types:
+
+| Banned heading style | Example | Rewrite to |
+|---|---|---|
+| Rhetorical question | "Are We Hitting Targets?" | "Performance against targets" |
+| Contrastive | "More than a CRM" | "What this CRM does" |
+| Marketing colon-subtitle | "Unlocking Growth: A Strategic Approach" | "Strategies for growth" |
+| Vague noun-phrase | "Empowering Teams Through Innovation" | "How teams use this platform" |
+| Metric-as-headline | "Revenue Down 12% in Q3" | "Q3 revenue performance" |
+
+Performative closer sentences also get cut at this stage: "This is how it all comes together," "What this all means is...," "The lesson here is..." Grand framing and motivational cadences ("In today's landscape," "At the heart of...") are removed.
 
 ## Configuration
 
-The skill operates in two intensity modes and supports four content types and three tone settings.
+The skill exposes two intensity modes, four content types, and three tone settings.
 
 ### Modes
-- **Light:** Word and sentence-level fixes only. Preserves document structure. Use when the source content is mostly correct and you want surgical edits.
-- **Full:** All five editorial layers run. Headings, paragraphs, narration, and section structure are rewritten. Use when the content needs editorial intervention beyond surface fixes.
 
-The skill defaults to inferring the right mode from content type. You can override by saying "Light mode" or "Full mode" in your invocation.
+**Light** runs the vocabulary and sentence passes only. Document structure is preserved.
+
+**Full** runs all five passes. Headings, paragraphs, and section structure are rewritten.
+
+The skill defaults to inferring mode from content type. Override by saying "Light mode" or "Full mode" in the request.
 
 ### Content types
-- **Technical documentation:** Code, API references, architecture writing. Preserves technical precision.
-- **Op-ed / Long-form essay:** Opinion writing, analytical essays. Rewrites rhetorical-question headings to declarative form.
-- **Marketing / Sales copy:** Aggressive removal of marketing filler and effusive openers.
-- **Proposal / Business document:** Formal third-person voice. Removes effusive openers ("We are pleased to..."), maintains business register.
+
+| Type | What changes |
+|---|---|
+| Technical documentation | Precise terms preserved. Marketing filler stripped from explanations. |
+| Op-ed or long-form essay | Rhetorical-question headings converted to declarative ones. |
+| Marketing or sales copy | Aggressive removal of filler, hype, and effusive openers. |
+| Proposal or business document | Formal third-person voice retained. Effusive openers ("We are pleased to...") removed. |
 
 ### Tones
-- **Professional:** Default. The serious editor voice. Plain, specific, useful.
-- **Casual:** Looser register. Complete sentences still required (no fragments, no Casual/Irreverent exceptions).
-- **Irreverent:** Sharper voice with stronger opinions. Same complete-sentence rule applies.
+
+| Tone | Voice |
+|---|---|
+| Professional (default) | Plain, specific, useful. The serious-editor voice. |
+| Casual | Looser register. Complete sentences enforced. |
+| Irreverent | Sharper voice. Fragments still get converted. |
 
 ## Known limitations
 
-- The metric-as-headline ban is universal across all content types and modes. There is no override. News-style "Revenue down 12%" headings are always converted to descriptive form.
-- Op-ed content with rhetorical-question headings will be rewritten. If the source genre genuinely requires rhetorical questions in headings (some essay forms do), the skill will still convert them.
-- The complete-sentence rule overrides all tone settings. Casual and Irreverent modes still require complete sentences. Fragments are converted regardless of tone.
-- The skill optimizes for readability and editorial substance. It does not attempt to mimic any specific author's voice or apply stylistic quirks.
+- The metric-as-headline ban is universal. News-style "Revenue Down 12% in Q3" headings are always rewritten, with no override.
+- The complete-sentence rule overrides tone settings. Fragments are converted in casual and irreverent registers too.
+- Heading-level rewrites in Full mode change document structure. Use Light mode when structure needs to stay intact.
+- The skill does not mimic any specific author's voice or apply stylistic quirks.
 
-## What the skill does not do
+## Why this design
 
-- Add typos, contractions, or surface roughness to make text "feel human"
-- Introduce randomness or eccentric phrasing
-- Apply intentionally broken grammar
-- Mimic the voice of any specific writer
+Most attempts to make AI writing sound human add surface roughness: random typos, fake contractions, deliberate grammar errors, and eccentric phrasing meant to read as quirky. This skill rejects that approach.
 
-The position is that these tricks produce visibly-edited AI writing, which is worse than unedited AI writing. The skill rewrites for substance, not for the appearance of imperfection.
+AI writing reads as AI because of specific structural habits: hedging, rhetorical scaffolding around weak claims, contrastive emphasis that makes filler feel substantive, framing-and-takeaway narration, and adjectives that signal importance without earning it. Surface cleanliness has nothing to do with it.
+
+The fix is editorial substance: cutting sentences that add no information, replacing generic words with specific ones, and varying rhythm. The skill rewrites for clarity and information density. It does not add randomness or roughness to fake authenticity.
 
 ## Contributing
 
-Issues and pull requests are welcome. Please describe the AI writing pattern you want addressed and provide a before/after example.
-
-When proposing additions to the banned vocabulary list, include three or more independent examples of the word appearing in generic AI output. The skill is deliberately conservative about additions, since banning a word also bans its legitimate uses.
+Issues and pull requests are welcome. When proposing a new banned word, include three or more examples of that word appearing in generic AI output, drawn from at least two different writing contexts. The skill is conservative about additions, since a banned word also bans its legitimate uses.
 
 ## License
 
-MIT License. See `LICENSE` for the full text.
-
-Copyright (c) 2026 TIMO Labs.
+Released under the MIT License. See `LICENSE` for the full text. Copyright (c) 2026 TIMO Labs.
