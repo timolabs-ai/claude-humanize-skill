@@ -42,11 +42,11 @@ Paste content and invoke:
 
 Trigger phrases also work: "humanize this," "make this sound human," "strip AI writing," "de-AI this."
 
-The skill picks intensity from content type by default. To force a mode, add it to the request, for example "humanize this in Full mode."
+The skill defaults to Light mode. To run a deeper rewrite, add "Full mode," "aggressive pass," or "deeper edit" to your request. Content type (Email, Slides, Proposal, or Blog/prose) is inferred from the structure.
 
 ## What the skill changes
 
-Five editorial layers run in sequence: vocabulary, sentence shape, bullet rhythm, paragraph rhythm, and section structure. Each layer targets a different class of AI writing tell.
+The editorial rules group into five categories: vocabulary, sentence shape, bullet rhythm, paragraph rhythm, and section structure. After the rules apply, the output runs through a pre-flight grep, a narration audit, and a final human-read test before delivery.
 
 ### 1. Vocabulary
 
@@ -60,7 +60,7 @@ The vocabulary pass removes words and phrases that mark text as marketing or con
 | at its core, in today's landscape, mission-critical | Filler framing | Cut |
 | delve, tapestry, resonate | Frequent in AI output | Substitute a concrete verb or cut |
 
-Em-dashes get replaced with commas, colons, or periods. Filler sentence openers ("To keep it direct," "In short," "Put simply") are deleted.
+Em-dashes above the budget (one per 300 words; one per 200 words in Irreverent tone) get replaced with commas, colons, or periods. Filler sentence openers ("To keep it direct," "In short," "Put simply") get cut.
 
 ### 2. Sentence shape
 
@@ -125,20 +125,22 @@ The skill exposes two intensity modes, four content types, and three tone settin
 
 ### Modes
 
-**Light** runs the vocabulary and sentence passes only. Document structure is preserved.
+**Light** (default) applies every editorial rule in the skill: vocabulary, sentence shape, bullet rhythm, paragraph-purpose, specificity-density, narration audit, and heading rules. The document's opening, ending, paragraph-length symmetry, and overall structure stay close to the original.
 
-**Full** runs all five passes. Headings, paragraphs, and section structure are rewritten.
+**Full** adds structural rewrites on top of Light. The opening paragraphs of long documents get reworked because AI tends to throat-clear, and the ending gets rewritten when it summarizes. The anti-symmetry pass varies paragraph lengths so the structure looks less uniform. Tone-dependent rhythm rules also apply on top of the universal ones.
 
-The skill defaults to inferring mode from content type. Override by saying "Light mode" or "Full mode" in the request.
+The skill stays in Light by default. To switch to Full, add "Full mode," "aggressive pass," or "deeper edit" to your request.
 
 ### Content types
 
-| Type | What changes |
-|---|---|
-| Technical documentation | Precise terms preserved. Marketing filler stripped from explanations. |
-| Op-ed or long-form essay | Rhetorical-question headings converted to declarative ones. |
-| Marketing or sales copy | Aggressive removal of filler, hype, and effusive openers. |
-| Proposal or business document | Formal third-person voice retained. Effusive openers ("We are pleased to...") removed. |
+Content type is inferred from the structure of the input. The skill recognizes four types:
+
+| Type | Inferred from | What changes beyond the universal rules |
+|---|---|---|
+| Email | Greeting opener ("Hi/Hello/Dear &lt;name&gt;") and a signature | Universal rules apply |
+| Presentation / slides | Mostly short bullets, sparse prose, deck-like sections | One idea per bullet, plain verbs replace corporate ones ("Build" for "Foster"), parenthetical asides are dropped |
+| Proposal / Business doc | Section headings, formal third-person, business vocabulary | Effusive openers and reader-addressing scaffolding removed; formal third-person voice retained; numbers and named standards preserved exactly |
+| Blog / prose (default fallback) | Headings, paragraphs, first or second person, conversational register | Universal rules apply |
 
 ### Tones
 
@@ -150,9 +152,8 @@ The skill defaults to inferring mode from content type. Override by saying "Ligh
 
 ## Known limitations
 
-- The metric-as-headline ban is universal. News-style "Revenue Down 12% in Q3" headings are always rewritten, with no override.
 - The complete-sentence rule overrides tone settings. Fragments are converted in casual and irreverent registers too.
-- Heading-level rewrites in Full mode change document structure. Use Light mode when structure needs to stay intact.
+- Heading rewrites apply in both Light and Full modes. The metric-as-headline, rhetorical-question, contrastive, colon-subtitle, and vague-abstraction bans are universal with no override. News-style "Revenue Down 12% in Q3" headings always become descriptive form. If you have a piece that intentionally uses one of those heading styles, consider whether /humanize is the right tool for it.
 - The skill does not mimic any specific author's voice or apply stylistic quirks.
 
 ## Why this design
