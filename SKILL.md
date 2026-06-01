@@ -1,6 +1,6 @@
 ---
 name: humanize
-description: Holistically rewrite AI-generated or AI-styled content so it reads like clear human-edited prose. Use when the user invokes /humanize, asks to "humanize this", "make this sound human", "remove AI writing", "de-AI this", "strip AI patterns", or "make this less robotic".
+description: Holistically rewrite AI-generated or AI-styled content so it reads like clear human-edited prose, including client-facing proposals, enterprise presentations, RFP responses, board materials, and business documents. Use when the user invokes /humanize, asks to "humanize this", "make this sound human", "remove AI writing", "de-AI this", "strip AI patterns", or "make this less robotic".
 ---
 
 # /humanize - Humanize AI-Generated Content
@@ -85,6 +85,18 @@ Run a final fidelity check after rewriting. Verify that all claims, instructions
 ## Rewrite Rules
 
 These rules apply across every content type and tone.
+
+### Rule priority
+
+When two rules conflict, the higher rule wins.
+
+1. Factual fidelity. The output means exactly what the source means. No added, dropped, softened, or hardened facts, claims, commitments, or uncertainty.
+2. Protected material. Code, inline code, URLs, links, quoted speech, named entities, proper nouns, brand names, numbers, dates, and named standards stay exact.
+3. Document convention. The output respects the accepted form of its content type. A contract reads like a contract, a proposal like a proposal.
+4. Reader clarity. The reader gets the point on first read, in language the reader would use.
+5. Anti-AI style rules. Everything else in this skill: banned words, banned constructions, rhythm budgets, heading shape.
+
+The anti-AI rules sit at the bottom on purpose. They serve the four tiers above them. If a style ban would distort a fact, break a convention the reader expects, or make a sentence harder to understand, the style ban yields. The complete-sentence rule is the one exception inside the style tier: it outranks the other style rules, but it still sits beneath factual fidelity and protected material, so preserved quoted speech keeps its original form.
 
 ### Complete-sentence rule
 
@@ -179,6 +191,8 @@ Replace each banned word with a plain, concrete alternative. Preserve a banned w
 | transformative | significant, large, big, or delete |
 | revolutionary | new, first-of-its-kind, or delete |
 | holistic | complete, end-to-end, or delete if vague |
+| cutting-edge | new, current, or name the specific capability |
+| game-changing | significant, large, or delete |
 
 ### Banned filler openers
 
@@ -256,7 +270,9 @@ Do not apply this to policy documents, technical specifications, formal announce
 
 ### Hedging reduction
 
-Remove hedging adverbs unless they are essential for factual accuracy:
+Separate two kinds of hedges. Empty hedges add caution without information. Epistemic qualifiers carry real uncertainty the author means. Remove the first kind. Preserve the second.
+
+Remove these filler adverbs, which weaken a sentence without changing its claim:
 
 - "somewhat"
 - "fairly"
@@ -265,15 +281,14 @@ Remove hedging adverbs unless they are essential for factual accuracy:
 - "rather"
 - "quite"
 
-The same applies to phrasal hedges:
+Treat phrasal hedges case by case:
 
-- "It could be argued that..." should state the claim directly, or be deleted.
-- "It may suggest that..." becomes "It suggests," or is deleted.
-- "In many cases..." is cut, or replaced with the specific case.
-- "It appears that..." is stated directly, or attributed to a source.
+- "It could be argued that..." states a claim the author owns. Drop the frame and state the claim directly.
 - "Some would say..." is deleted unless followed by a specific named "some."
+- "In many cases..." is replaced with the specific case when the source names it, or cut when it is pure padding.
+- "It may suggest that...," "It appears that...," and "likely" carry genuine uncertainty. Keep the uncertainty. Tighten the wording only if it does not harden a "may" into a "does." When the source attributes the claim, attribute it; do not convert a qualified observation into a fact.
 
-When in doubt, remove the hedge.
+When in doubt, keep the qualifier. Removing a hedge that carried real uncertainty changes the author's meaning, which this skill never does.
 
 ### Attribution and claims
 
@@ -350,15 +365,17 @@ Generic paragraph:
 
 > Companies that invest in customer success see better retention outcomes. This is increasingly important in competitive markets.
 
-Rewrite with specificity:
+Rewrite with specificity, using only facts present in the source:
 
-> After moving two account managers from new sales to mid-market renewals, the SaaS company's retention rate moved from 78% to 91% over three quarters. Other teams in the same segment have reported similar shifts when they hire dedicated customer-success staff.
+> After moving two account managers from new sales to mid-market renewals, the company's retention rate rose over the following three quarters. Other teams in the same segment reported similar shifts after hiring dedicated customer-success staff.
+
+Every concrete element above - the two account managers, the segment, the three-quarter window - must come from the source. If the source states hard numbers, keep them exact. If it does not, do not invent them. When the source offers no specifics, shorten the paragraph or merge its one load-bearing sentence into an adjacent paragraph. Manufacturing a statistic to satisfy this rule is a fidelity failure, not a fix.
 
 ---
 
 ## Heading and Title Rules
 
-Headings describe what the section contains, in plain language. They should not perform cleverness, urgency, or depth. The test: would this fit as a Wikipedia section heading, textbook chapter title, or explainer subsection? If it would feel out of place there, rewrite it.
+Headings describe what the section contains, in plain language. They should not perform cleverness, urgency, or depth. For client-facing proposals, RFP responses, bank decks, board materials, and enterprise presentations, headings must read like market-standard proposal headings, not internal planning notes, editorial commentary, or explainer labels.
 
 **Banned in headings:**
 
@@ -367,14 +384,16 @@ Headings describe what the section contains, in plain language. They should not 
 - **Colon-subtitle marketing format** such as "Unlocking X: A Y Approach" or "Mastering X: The Z Guide." Pick one half and cut the other.
 - **Vague noun-phrase abstractions** such as "Empowering Teams Through Innovation," "The Future of X," or "Driving Y Forward." Rewrite each as a concrete description of what the section actually covers.
 - **Metric-as-headline** such as "Revenue down 12%," "40% productivity gain," or "Q3 Revenue Missed Plan by 12%." Numbers belong in the body where they have context. Convert to descriptive form: "Q3 revenue performance," "Productivity changes since launch," or "Cost reduction this year."
+- **Internal planning labels** such as "Story spine," "What the client asked for," "Why this matters," "How we win," "The ask," "Our bet," "Where we fit," "Proof-point handling," and "Source-boundary discipline." Convert these to client-facing enterprise headings.
 
 **Preferred shape:**
 
 - Use descriptive declarative phrases.
-- Stay under 12 words.
+- Stay under 12 words when possible.
 - Prefer specific over abstract.
 - Use concrete subjects.
-- Read like a section heading in a well-edited textbook or explainer, not a slide title or marketing email.
+- For enterprise decks and proposals, use accepted business-document phrasing: engagement context, evaluation priorities, capability alignment, solution architecture, delivery approach, governance model, security controls, implementation roadmap, operating KPIs, and risk controls.
+- Read like a section heading in a well-edited enterprise proposal, board paper, RFP response, or client presentation.
 
 ---
 
@@ -414,6 +433,7 @@ Presentations apply all rules above, plus these constraints:
 - Strip rhetorical embellishment from bullets and titles.
 - Do not add parenthetical asides.
 - Keep slide text brief, but do not use fragments as punch lines.
+- If the deck is client-facing, titles must sound like final presentation titles, not working notes. Replace labels such as "Today’s objective and the lens we will use" with "Session Objectives and Evaluation Focus," and replace "What these patterns mean for the client" with "Relevance to the Client Platform Scope."
 
 ### Proposal / Business Docs
 
@@ -424,6 +444,7 @@ Proposals and business documents apply all rules above, plus these constraints:
 - Use no marketing slogans in section bodies or titles.
 - Preserve precision: numbers, version identifiers, named standards, RFP section references, and commitments stay exact.
 - Default to third-person formal voice unless the user asks otherwise.
+- Use formal proposal headings for client, bank, government, enterprise, or RFP material. Examples: "Engagement Context and Scope," "Client Evaluation Priorities," "Relevant Delivery Experience," "Capability-to-Requirement Alignment," "Target Architecture," "Security and Compliance Controls," "Delivery Model," and "Implementation Roadmap."
 
 ---
 
@@ -435,7 +456,7 @@ Before producing output, scan the rewritten content for AI-tell patterns that ma
 
 - em dash count above the budget
 - contrastive constructions in body or headings: `not just`, `rather than`, `More than`, `Beyond `, `At its core`
-- banned vocabulary: `seamless`, `robust`, `leverage`, `delve`, `unlock`, `holistic`, `tapestry`, `resonate`, `transformative`, `revolutionary`, `cutting-edge`
+- banned vocabulary: scan for every word in the Banned words table above, not a subset - delve, tapestry, realm, vibrant, robust, pivotal, nuanced, multifaceted, seamless, foster, cultivate, underscore, embark, leverage, navigate, empower, journey, curated, intentional, unlock, resonate, transformative, revolutionary, holistic, plus cutting-edge and game-changing
 - banned transitions: `Furthermore,`, `Moreover,`, `Additionally,`, `What's more,`
 - reader-addressing scaffolding: `Here's`, `What this means`, `It's worth noting`, `It is important to note`, `Let me explain`, `Let me break`
 - filler openers: `In today's`, `In an era of`
@@ -490,6 +511,6 @@ Show the full change log only when the user asks for it. Keep it factual: struct
 - If something is already human and works, keep it.
 - When choosing between two phrasings, pick the shorter, plainer one.
 - Real quoted speech is untouchable. People actually say banned words sometimes.
-- The complete-sentence rule outranks every other rule in this skill.
+- The complete-sentence rule outranks every other style rule in this skill, but it sits beneath factual fidelity and protected material in the rule priority stack.
 - Heading rules apply universally across content types, including the metric-as-headline ban.
 - The editor running this skill must apply judgment beyond the checklist. The rules catch patterns; the editor catches shape.
